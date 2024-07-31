@@ -1,9 +1,18 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const pool = require('../config/mariadb.config');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+
+router.get('/', async (req, res) => {
+  try {
+    conn = await pool();
+    const [rows] = await conn.query('SELECT * FROM tbl_member');
+    res.json(rows);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error fetching users");
+  } 
 });
 
 module.exports = router;
