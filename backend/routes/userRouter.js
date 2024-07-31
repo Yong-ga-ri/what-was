@@ -7,10 +7,9 @@ const pool = require('../config/mariadb.config');
 router.get('/', async (req, res) => {
   try {
     conn = await pool();
-    const [rows] = await conn.query('SELECT * FROM tbl_member');
+    const rows = await conn.query('SELECT * FROM tbl_member');
     res.json(rows);
   } catch (err) {
-    console.log(err);
     res.status(500).send("Error fetching users");
   } 
 });
