@@ -28,19 +28,21 @@ router.post('/keyword', async (req, res) => {
 		//   res.status(500).send("Error requesting openai");
 		// } 
 		} catch {
-			res.status(500).send("Error fetching users");
+			res.status(500).send("Error requesting openai with keyword");
 		}
 	}
 );
 
 router.post('/idiom', async (req, res) => {
 	try {
-		const { prompt } = req.body.msg;
+		const prompt = req.body.msg;
 		let response;
 		if (!prompt) return res.status(400).json({ error: 'empty request message' });
 
 		try {
+			console.log("before to service: response: ", response);
 			response = await openaiService.getIdiomResponse(prompt);
+			console.log("after to service: response: ", response);
 			res.json({ response });
 		} catch (err) {
 			res.status(500).send("Error requesting openai with idiom");
