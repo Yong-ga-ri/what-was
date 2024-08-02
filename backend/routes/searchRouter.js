@@ -8,4 +8,3 @@ router.get('/:type', controller.getHistoryListByType);
 router.post('/', controller.search);
 
 module.exports = router;
-//
