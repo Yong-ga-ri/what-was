@@ -56,5 +56,4 @@ exports.getFeedbackList = async (req, res) => {
 	} finally {
 		if (conn) conn.release();
 	}
-	
 }
