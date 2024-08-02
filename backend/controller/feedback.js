@@ -46,7 +46,7 @@ exports.getFeedbackList = async (req, res) => {
 
 	try {
 		const resultSet = await conn.query(
-			`SELECT memo, content, updated_at, created_at, member_id FROM tbl_feedback WHERE is_active = TRUE`
+			`SELECT memo, content, updated_at, created_at, member_id FROM tbl_feedback WHERE is_active = TRUE ORDER BY created_at DESC`
 		);
 		res.json({
 			'result': resultSet
