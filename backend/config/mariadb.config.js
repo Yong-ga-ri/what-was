@@ -11,14 +11,13 @@ const pool = mariadb.createPool({
 });
 
 // query function return promise
-const getPromisPool = async () => {
+const getPromisePool = async () => {
 	try {
 		const conn = await pool.getConnection();
-		console.log("succesfully connected with database");
 		return conn;
 	} catch (error) {
 		throw error;
 	}
 };
 
-module.exports = getPromisPool;
+module.exports = getPromisePool;

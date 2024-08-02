@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-// const pool = require('../config/mariadb.config');
 const openaiService = require('../service/openaiService');
 const pool = require('../config/mariadb.config');
 
@@ -24,6 +23,8 @@ router.post('/keyword', async (req, res) => {
 				});
 			} catch (err) {
 				res.status(500).send("Error stocking response on db with idiom");
+			} finally {
+				if (conn) conn.release();
 			}
 		} catch (err) {
 				res.status(500).send("Error requesting openai with idiom");
@@ -51,6 +52,8 @@ router.post('/idiom', async (req, res) => {
 				});
 			} catch (err) {
 				res.status(500).send("Error stocking response on db with idiom");
+			} finally {
+				if (conn) conn.release();
 			}
 		} catch (err) {
 			res.status(500).send("Error requesting openai with idiom");
