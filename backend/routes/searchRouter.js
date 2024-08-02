@@ -1,64 +1,65 @@
 const express = require('express');
 const router = express.Router();
-// const pool = require('../config/mariadb.config');
 const openaiService = require('../service/openaiService');
+const pool = require('../config/mariadb.config');
 
 /* GET users listing. */
 
 router.post('/keyword', async (req, res) => {
-	try {
-		const prompt = req.body.msg;
-		let response;
-		if (!prompt) return res.status(400).json({ error: 'empty request message' });
-
+		const requestMsg = req.body.msg;
+		if (!requestMsg) return res.status(400).json({ error: 'empty request message' });
 		try {
-			console.log("before to service: response: ", response);
-			response = await openaiService.getKeywordsResponse(prompt);
-			console.log("after to service: response: ", response);
-			res.json({ response });
+			result = await openaiService.getKeywordsResponse(requestMsg);
+			try {
+				conn = await pool();
+				const rows = await conn.query(
+					`INSERT INTO tbl_search (message, answer, updated_at, created_at, type, member_id) VALUE('${requestMsg}', '${result}', NOW(), NOW(), TRUE, 3)`
+				);
+				console.log("rows: ", rows);
+				res.json({
+					"request_msg": requestMsg,
+					"result_msg": result,
+					"request_type": 1
+				});
+			} catch (err) {
+				res.status(500).send("Error stocking response on db with idiom");
+			} finally {
+				if (conn) conn.release();
+			}
 		} catch (err) {
-			res.status(500).send("Error requesting openai with keyword");
-		}
-
-		// db에 검색 결과 저장
-		//   conn = await pool();
-		//   const [rows] = await conn.query('SELECT * FROM tbl_member');
-		//   res.json(rows);
-		// } catch (err) {
-		//   res.status(500).send("Error requesting openai");
-		// } 
-		} catch {
-			res.status(500).send("Error requesting openai with keyword");
+				res.status(500).send("Error requesting openai with idiom");
 		}
 	}
 );
 
 router.post('/idiom', async (req, res) => {
-	try {
-		const prompt = req.body.msg;
-		let response;
-		if (!prompt) return res.status(400).json({ error: 'empty request message' });
+	const requestMsg = req.body.msg;
+	if (!requestMsg) return res.status(400).json({ error: 'empty request message' });
 
 		try {
-			console.log("before to service: response: ", response);
-			response = await openaiService.getIdiomResponse(prompt);
-			console.log("after to service: response: ", response);
-			res.json({ response });
+			result = await openaiService.getIdiomResponse(requestMsg);
+
+			try {
+				conn = await pool();
+				const rows = await conn.query(
+					`INSERT INTO tbl_search (message, answer, updated_at, created_at, type, member_id) VALUE('${requestMsg}', '${result}', NOW(), NOW(), FALSE, 3)`
+				);
+				console.log("rows: ", rows);
+				res.json({
+					"request_msg": requestMsg,
+					"result_msg": result,
+					"request_type": 0
+				});
+			} catch (err) {
+				res.status(500).send("Error stocking response on db with idiom");
+			} finally {
+				if (conn) conn.release();
+			}
 		} catch (err) {
 			res.status(500).send("Error requesting openai with idiom");
 		}
-
-		// db에 검색 결과 저장
-		//   conn = await pool();
-		//   const [rows] = await conn.query('SELECT * FROM tbl_member');
-		//   res.json(rows);
-		// } catch (err) {
-		//   res.status(500).send("Error requesting openai");
-		// } 
-		} catch {
-			res.status(500).send("Error fetching users");
-		}
 	}
+
 );
 
 module.exports = router;

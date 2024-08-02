@@ -8,6 +8,7 @@ const pool = require('./config/mariadb.config')
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/userRouter');
 const openaiRouter = require('./routes/searchRouter');
+const feedbackRouter = require('./routes/feedback');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use('/api', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/ask', openaiRouter);
+app.use('/api/feedback', feedbackRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -11,7 +11,9 @@ router.get('/', async (req, res) => {
     res.json(rows);
   } catch (err) {
     res.status(500).send("Error fetching users");
-  } 
+  } finally {
+		if (conn) conn.release();
+	}
 });
 
 module.exports = router;
