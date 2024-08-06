@@ -22,7 +22,7 @@ exports.search = async (req, res) => {
 			);
 			res.json({
 				"request_msg": requestMsg,
-				"result_msg": result,
+				"result_message": result.split(', '),
 				"request_type": reqestType
 			});
 		} catch (err) {
@@ -42,7 +42,7 @@ exports.getAllSearchHistoryList = async (req, res) => {
 			`SELECT message, answer, updated_at, created_at FROM tbl_search ORDER BY created_at DESC`
 		);
 		res.json({
-			"result_msg": result
+			"result_message": result
 		});
 	} catch (err) {
 		res.status(500).send(`Error searching history`);
@@ -64,7 +64,7 @@ exports.getHistoryListByType = async (req, res) => {
 			`SELECT message, answer, updated_at, created_at FROM tbl_search WHERE type = ${type} ORDER BY created_at DESC`
 		);
 		res.json({
-			"result_msg": result,
+			"result_message": result,
 			"request_type": req.params.type
 		});
 	} catch (err) {
@@ -73,3 +73,23 @@ exports.getHistoryListByType = async (req, res) => {
 		if (conn) conn.release();
 	}
 };
+
+exports.getSearchHistoryById = async (req, res) => {
+	const id = req.params.id;
+
+	try {
+		conn = await pool();
+		const result = await conn.query(
+			`SELECT message, answer, updated_at, created_at FROM tbl_search WHERE search_id = ${id}`
+		);
+		res.json({
+			"request_message": result[0].message,
+			"result_message": result[0].answer.split(', '),
+			"created_at": result[0].created_at
+		});
+	} catch (err) {
+		res.status(500).send(`Error searching history by ${id} `);
+	} finally {
+		if (conn) conn.release();
+	}
+}
