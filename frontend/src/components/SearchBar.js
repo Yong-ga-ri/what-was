@@ -33,11 +33,11 @@ const SearchBar = ({ onSearch }) => {
     console.log("searchMode: ", searchMode);
 
     try {
-      // const response = await axios.get('localhost:3001/api/search?type=keyword', { 'msg': query });
-      const response = await axios.get(`http://localhost:3001/api/ask/${searchMode}`);
-      onSearch(response.data.result_msg);
-      console.log("response:", response.data.result_msg[0]);
-      console.log("requestType:", response.data.request_type);
+      // const response = await axios.get(`http://localhost:3001/api/ask/${searchMode}`);
+      const response = await axios.get('http://localhost:3001/api/ask/10');
+      onSearch(response.data);
+      // console.log("response:", response.data.result_msg[0]);
+      // console.log("requestType:", response.data.request_type);
     } catch (e) {
       console.log(e)
     }
