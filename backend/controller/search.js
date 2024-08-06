@@ -22,7 +22,7 @@ exports.search = async (req, res) => {
 			);
 			res.json({
 				"request_msg": requestMsg,
-				"result_msg": result,
+				"result_msg": result.split(', '),
 				"request_type": reqestType
 			});
 		} catch (err) {
