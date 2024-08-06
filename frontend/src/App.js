@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import SideBar from './components/Sidebar';
 import SearchBar from './components/SearchBar';
+import SearchResults from './components/SearchResults';
 import styled from 'styled-components';
 
 const AppContainer = styled.div`
@@ -15,11 +16,16 @@ flex-direction: column;
 `;
 
 function App() {
+  const [results, setResults] = useState([]);
+  const handleSearch = (data) => {
+    setResults(data); // 검색 결과를 상태에 저장
+  };
   return (
     <AppContainer>
       <SideBar />
       <Content>
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} />
+        <SearchResults results={results} />
       </Content>
     </AppContainer>
   );

@@ -25,8 +25,6 @@ const Sidebar = () => {
     <SidebarContainer>
       <SidebarItem>Home</SidebarItem>
       <SidebarItem>About</SidebarItem>
-      <SidebarItem>Contact</SidebarItem>
-      <SidebarItem>Services</SidebarItem>
     </SidebarContainer>
   );
 };
